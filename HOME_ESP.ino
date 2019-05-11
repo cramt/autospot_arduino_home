@@ -41,11 +41,11 @@ void setup() {
   ip = WiFi.localIP().toString();
 
   Udp.begin(69);
-  stepper1.setMaxSpeed(60);
-  stepper1.setAcceleration(60);
+  stepper1.setMaxSpeed(100);
+  stepper1.setAcceleration(2000);
   stepper1.moveTo(0);
-  stepper2.setMaxSpeed(60);
-  stepper2.setAcceleration(60);
+  stepper2.setMaxSpeed(100);
+  stepper2.setAcceleration(2000);
   stepper2.moveTo(0);
 }
 
@@ -64,14 +64,14 @@ void loop() {
   int packetSize = Udp.parsePacket();
   if (packetSize) {
     int len = Udp.read(packetBuffer, 255);
-    if (len > 0) {
-      packetBuffer[len] = 0;
-    }
     String content = packetBuffer;
+    Serial.println(content);
     int index = content.indexOf(',');
     int xy = content.substring(0,index).toInt();
     int yz = content.substring(index+1, content.length()).toInt();
-    stepper1.moveTo(xy);
-    stepper2.moveTo(yz);
+    Serial.println(String(xy));
+    Serial.println(String(yz));
+    stepper1.move(xy);
+    stepper2.move(yz);
   }
 }
